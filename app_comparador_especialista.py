@@ -185,13 +185,27 @@ else:
         arquivos = listar_arquivos_pasta()
         arquivos_sel = st.multiselect("Selecione os PDFs para análise:", arquivos, default=arquivos[:2] if len(arquivos)>=2 else arquivos)
         
-        if st.session_state.role == "admin":
+if st.session_state.role == "admin":
             with st.expander("Painel Admin"):
+                # Gerenciar Usuários
+                st.markdown("👤 **Usuários**")
                 with st.form("c"):
                     nu=st.text_input("Novo User"); np=st.text_input("Senha",type="password"); nt=st.selectbox("Tipo",["colaborador","admin"])
                     if st.form_submit_button("Criar"): criar_usuario(nu,np,nt)
                 df=listar_usuarios(); ex=st.selectbox("Excluir",df['username']); 
                 if st.button("Deletar"): excluir_usuario(ex); st.rerun()
+                
+                # NOVO: Gerenciar PDFs
+                st.divider()
+                st.markdown("🗑️ **Apagar PDFs**")
+                pdf_excluir = st.selectbox("Escolha o arquivo para excluir:", ["Nenhum"] + arquivos)
+                if st.button("Excluir PDF") and pdf_excluir != "Nenhum":
+                    caminho_apagar = os.path.join(PASTA_PDFS, pdf_excluir)
+                    if os.path.exists(caminho_apagar):
+                        os.remove(caminho_apagar)
+                        st.success(f"{pdf_excluir} apagado com sucesso!")
+                        time.sleep(1)
+                        st.rerun()
 
     st.title("📊 Analista de Seguros")
     st.caption("Qualidade de leitura aumentada para tabelas pequenas.")
@@ -215,3 +229,4 @@ else:
                         st.session_state.messages.append({"role": "assistant", "content": resposta_final})
                     except Exception as e:
                         st.error(f"Ocorreu um erro: {e}")
+
