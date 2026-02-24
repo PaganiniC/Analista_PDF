@@ -185,7 +185,8 @@ else:
         arquivos = listar_arquivos_pasta()
         arquivos_sel = st.multiselect("Selecione os PDFs para análise:", arquivos, default=arquivos[:2] if len(arquivos)>=2 else arquivos)
         
-if st.session_state.role == "admin":
+        # PAINEL ADMIN CORRETAMENTE ALINHADO
+        if st.session_state.role == "admin":
             with st.expander("Painel Admin"):
                 # Gerenciar Usuários
                 st.markdown("👤 **Usuários**")
@@ -207,6 +208,7 @@ if st.session_state.role == "admin":
                         time.sleep(1)
                         st.rerun()
 
+    # AREA PRINCIPAL DO CHAT CORRETAMENTE ALINHADA
     st.title("📊 Analista de Seguros")
     st.caption("Qualidade de leitura aumentada para tabelas pequenas.")
     
@@ -229,4 +231,3 @@ if st.session_state.role == "admin":
                         st.session_state.messages.append({"role": "assistant", "content": resposta_final})
                     except Exception as e:
                         st.error(f"Ocorreu um erro: {e}")
-
